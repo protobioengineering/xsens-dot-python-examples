@@ -17,7 +17,7 @@ import sys
 from bleak import BleakClient, BleakScanner
 from charset_normalizer import from_bytes, detect
 
-
+# Replace `address` with your Xsens DOT's address
 address = 'ABCDEFGA-1111-2222-3333-444444555555'
 battery_characteristic_uuid = '15173001-4947-11e9-8646-d663bd873d93'
 
