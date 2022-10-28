@@ -22,7 +22,7 @@ from bleak import BleakScanner
 async def main():
     devices = await BleakScanner.discover()
     xsens_dots = [dot for dot in devices if 'Xsens DOT' in str(dot)]
-    if xsens_dots == None:
+    if xsens_dots == [] or xsens_dots == None:
         print('No Xsens DOTs were found. Are the Xsens DOTs turned on?')
     else:
         print('Xsens DOTs found with the following addresses:')
