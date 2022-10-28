@@ -15,7 +15,7 @@ import numpy as np
 import sys
 
 from bleak import BleakClient, BleakScanner
-from charset_normalizer import from_bytes, detect
+
 
 # Replace `address` with your Xsens DOT's address
 address = 'ABCDEFGA-1111-2222-3333-444444555555'
