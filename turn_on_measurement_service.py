@@ -11,7 +11,7 @@ Requires Bleak (Bluetooth LE Agnostic Klient)
 
 Example output:
     $ python3 turn_on_measurement_service.py
-
+    
 '''
 
 
@@ -52,7 +52,7 @@ payload_modes = {
     "Custom mode 5": [26, b'\x1A'],
 }
 
-def encode_bytes_to_string(bytes_):
+def encode_device_bytes_to_string(bytes_):
     # These bytes are grouped according to Xsens's BLE specification doc
     data_segments = np.dtype([
         ('a', np.uint8),
@@ -62,10 +62,24 @@ def encode_bytes_to_string(bytes_):
     formatted_data = np.frombuffer(bytes_, dtype=data_segments)
     return formatted_data
 
+def encode_free_accel_bytes_to_string(bytes_):
+    # These bytes are grouped according to Xsens's BLE specification doc
+    data_segments = np.dtype([
+        ('timestamp', np.uint32),
+        ('x', np.float32),
+        ('y', np.float32),
+        ('z', np.float32),
+        ('zero_padding', np.uint32)
+        ])
+    formatted_data = np.frombuffer(bytes_, dtype=data_segments)
+    return formatted_data
+
+
 def handle_short_payload_notification(sender, data):
     print('Short payload notification received.')
     print(f'\tSender: {sender}')
     print(f'\tData: {data}')
+    print(f'\tEncoded Free Acceleration: {encode_free_accel_bytes_to_string(data)}')
 
 
 async def main(ble_address):
@@ -108,7 +122,7 @@ async def main(ble_address):
             print('////////////////////////////////////////////////')
             print(f'Reading characteristic at `{measurement_characteristic_uuid}`...')
             device_info = await client.read_gatt_char(measurement_characteristic_uuid)
-            encoded_device_info = encode_bytes_to_string(device_info)
+            encoded_device_info = encode_device_bytes_to_string(device_info)
             print(f'Raw device info: {device_info}')
             print(f'Encoded Device info: {encoded_device_info}')
 
@@ -142,7 +156,7 @@ async def main(ble_address):
             print('////////////////////////////////////////////////')
             print(f'Reading characteristic at `{measurement_characteristic_uuid}`...')
             device_info = await client.read_gatt_char(measurement_characteristic_uuid)
-            encoded_device_info = encode_bytes_to_string(device_info)
+            encoded_device_info = encode_device_bytes_to_string(device_info)
             print(f'Raw device info: {device_info}')
             print(f'Encoded Device info: {encoded_device_info}')
 
